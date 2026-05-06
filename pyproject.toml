@@ -48,6 +48,8 @@ dependencies = [
     "ngio>=0.5.7,<0.6.0",
     "scikit-image>=0.26.0",
     "fractal-task-tools>=0.4.0,<0.5.0",
+    "fractal-tasks-utils>=0.1.5,<0.2.0",
+    "stardist>=0.9.1",
 ]
 
 # Optional dependencies (e.g. for `pip install -e ".[dev]"`, see
@@ -106,6 +108,9 @@ skip-magic-trailing-comma = false # default is false
 [tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64"]
+
+[tool.pixi.dependencies]
+tensorflow = ">=2.13"
 
 [tool.pixi.pypi-dependencies]
 fractal-stardist-segmentation-task = { path = ".", editable = true }
