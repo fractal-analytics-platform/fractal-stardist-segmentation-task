@@ -43,7 +43,7 @@ authors = [
 ]
 
 # Required Python version and dependencies
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "ngio>=0.5.7,<0.6.0",
     "scikit-image>=0.26.0",
@@ -131,7 +131,7 @@ create-manifest = { cmd = [
     "fractal-stardist-segmentation-task",
 ] }
 
-test = { cmd = ["pytest", "./tests/"] }
+test = { cmd = ["pytest", "-s", "./tests/"], default-environment = "dev" }
 
 init-tasks = [
     { task = "install-pre-commit", environment = "dev" },

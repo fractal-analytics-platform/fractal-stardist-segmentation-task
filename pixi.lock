@@ -2045,8 +2045,8 @@ packages:
   requires_python: '>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,<4'
 - pypi: ./
   name: fractal-stardist-segmentation-task
-  version: 0.1.1.dev1+g582efc7ae.d20260506
-  sha256: 0bbd6b449a3e1a4b5da8115f85339d243619b1d2c5fcf3d2addffe903f0a9c72
+  version: 0.1.1.dev2+g33d2fcb87.d20260506
+  sha256: 460ac16fad8126b85f345d232afb132126c71092d5e34a7307c07c3ee8875361
   requires_dist:
   - fractal-task-tools>=0.5.0,<0.6.0
   - fractal-tasks-utils>=0.1.5,<0.2.0
@@ -2061,7 +2061,7 @@ packages:
   - pytest ; extra == 'dev'
   - requests ; extra == 'dev'
   - ruff ; extra == 'dev'
-  requires_python: '>=3.11,<3.15'
+  requires_python: '>=3.11,<3.14'
 - pypi: https://files.pythonhosted.org/packages/3c/41/d5c727c0a7ff30c8270d4bab4bd1726f701938181174c792aad898c38ac8/fractal_task_tools-0.5.0-py3-none-any.whl
   name: fractal-task-tools
   version: 0.5.0

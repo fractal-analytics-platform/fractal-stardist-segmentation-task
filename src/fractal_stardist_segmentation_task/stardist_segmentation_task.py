@@ -12,6 +12,7 @@ from ngio import ChannelSelectionModel, open_ome_zarr_container
 from pydantic import Field, validate_call
 
 from fractal_stardist_segmentation_task.segmentation_utils import (
+    StarDistModelPreset,
     load_stardist_model,
     segment_image,
 )
@@ -34,9 +35,12 @@ def stardist_segmentation_task(
     label_name: str = "{channel_identifier}_stardist_segmented",
     level_path: str | None = None,
     # StarDist model parameters
-    stardist_model: str = "2D_versatile_fluo",
+    stardist_model: StarDistModelPreset = StarDistModelPreset.versatile_fluo_2d,
+    custom_model_path: str | None = None,
     prob_thresh: float | None = None,
     nms_thresh: float | None = None,
+    normalize_perc_low: float = 1.0,
+    normalize_perc_high: float = 99.8,
     # Iterator / infrastructure parameters
     iterator_configuration: IteratorConfig | None = None,
     pre_post_process: SegmentationTransformConfig = Field(  # noqa: B008
@@ -50,8 +54,8 @@ def stardist_segmentation_task(
     """Segment an image using StarDist.
 
     Runs StarDist instance segmentation on a Fractal OME-Zarr dataset.
-    Supports both 2D and 3D pretrained models. The model is selected by name
-    and downloaded/cached automatically on first use.
+    Supports both 2D and 3D pretrained models as well as custom trained models.
+    The pretrained model is downloaded and cached automatically on first use.
 
     Args:
         zarr_url (str): URL to the OME-Zarr container.
@@ -63,14 +67,22 @@ def stardist_segmentation_task(
         level_path (str | None): If the OME-Zarr has multiple resolution
             levels, the level to use can be specified here. If not provided,
             the highest resolution level will be used.
-        stardist_model (str): Name of the pretrained StarDist model to use.
-            2D models: "2D_versatile_fluo", "2D_versatile_he",
+        stardist_model (StarDistModelPreset): Pretrained StarDist model to use.
+            Ignored when custom_model_path is provided.
+            2D models: "2D_versatile_fluo" (default), "2D_versatile_he",
             "2D_paper_dsb2018". 3D models: "3D_demo".
-            Defaults to "2D_versatile_fluo".
+        custom_model_path (str | None): Path to a custom StarDist model
+            directory. The directory must contain a config.json file. When
+            provided, this takes precedence over stardist_model. The model
+            type (2D or 3D) is detected automatically from config.json.
         prob_thresh (float | None): Probability threshold for instance
             detection. If None, the model's default threshold is used.
         nms_thresh (float | None): Non-maximum suppression threshold for
             instance overlap removal. If None, the model's default is used.
+        normalize_perc_low (float): Lower percentile for input normalization.
+            Pixels at or below this percentile are mapped to 0. Default: 1.0.
+        normalize_perc_high (float): Upper percentile for input normalization.
+            Pixels at or above this percentile are mapped to 1. Default: 99.8.
         iterator_configuration (IteratorConfig | None): Advanced configuration
             to control masked and ROI-based iteration.
         pre_post_process (SegmentationTransformConfig): Configuration for pre-
@@ -91,7 +103,10 @@ def stardist_segmentation_task(
     logger.info(f"Formatted label name: {label_name=}")
 
     # Load the StarDist model (with retry logic for cluster race conditions)
-    model = load_stardist_model(stardist_model=stardist_model)
+    model = load_stardist_model(
+        stardist_model=stardist_model,
+        custom_model_path=custom_model_path,
+    )
 
     # Set up the segmentation iterator
     iterator = setup_segmentation_iterator(
@@ -111,6 +126,8 @@ def stardist_segmentation_task(
             model=model,
             prob_thresh=prob_thresh,
             nms_thresh=nms_thresh,
+            normalize_perc_low=normalize_perc_low,
+            normalize_perc_high=normalize_perc_high,
         ),
         iterator=iterator,
     )

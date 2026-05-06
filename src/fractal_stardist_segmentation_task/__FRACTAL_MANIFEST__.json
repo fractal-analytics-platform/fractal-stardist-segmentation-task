@@ -361,6 +361,17 @@
             },
             "title": "SkipCreateMaskingRoiTable",
             "type": "object"
+          },
+          "StarDistModelPreset": {
+            "description": "Pretrained StarDist model presets.",
+            "enum": [
+              "2D_versatile_fluo",
+              "2D_versatile_he",
+              "2D_paper_dsb2018",
+              "3D_demo"
+            ],
+            "title": "StarDistModelPreset",
+            "type": "string"
           }
         },
         "additionalProperties": false,
@@ -395,10 +406,23 @@
             "description": "If the OME-Zarr has multiple resolution levels, the level to use can be specified here. If not provided, the highest resolution level will be used."
           },
           "stardist_model": {
+            "$ref": "#/$defs/StarDistModelPreset",
             "default": "2D_versatile_fluo",
             "title": "Stardist Model",
-            "type": "string",
-            "description": "Name of the pretrained StarDist model to use. 2D models: \"2D_versatile_fluo\", \"2D_versatile_he\", \"2D_paper_dsb2018\". 3D models: \"3D_demo\". Defaults to \"2D_versatile_fluo\"."
+            "description": "Pretrained StarDist model to use. Ignored when custom_model_path is provided. 2D models: \"2D_versatile_fluo\" (default), \"2D_versatile_he\", \"2D_paper_dsb2018\". 3D models: \"3D_demo\"."
+          },
+          "custom_model_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Custom Model Path",
+            "description": "Path to a custom StarDist model directory. The directory must contain a config.json file. When provided, this takes precedence over stardist_model. The model type (2D or 3D) is detected automatically from config.json."
           },
           "prob_thresh": {
             "anyOf": [
@@ -425,6 +449,18 @@
             "default": null,
             "title": "Nms Thresh",
             "description": "Non-maximum suppression threshold for instance overlap removal. If None, the model's default is used."
+          },
+          "normalize_perc_low": {
+            "default": 1.0,
+            "title": "Normalize Perc Low",
+            "type": "number",
+            "description": "Lower percentile for input normalization. Pixels at or below this percentile are mapped to 0. Default: 1.0."
+          },
+          "normalize_perc_high": {
+            "default": 99.8,
+            "title": "Normalize Perc High",
+            "type": "number",
+            "description": "Upper percentile for input normalization. Pixels at or above this percentile are mapped to 1. Default: 99.8."
           },
           "iterator_configuration": {
             "anyOf": [
