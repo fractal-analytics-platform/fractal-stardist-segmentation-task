@@ -81,9 +81,17 @@
                 "type": "number"
               },
               "sigma_z": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
                 "description": "Standard deviation for Gaussian kernel in Z axis.\nIf not specified, no blurring is applied in Z axis.",
-                "title": "Sigma Z",
-                "type": "number"
+                "title": "Sigma Z"
               }
             },
             "title": "GaussianBlurConfig",
@@ -100,14 +108,30 @@
                 "type": "string"
               },
               "kernel_size_xy": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
                 "description": "Shape of kernel in XY plane. If None, the default is 1/8 of image height by\n1/8 of its width.",
-                "title": "Kernel Size XY",
-                "type": "integer"
+                "title": "Kernel Size XY"
               },
               "kernel_size_z": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
                 "description": "Shape of kernel in Z axis. If None, the default is 1/8 of image height by\n1/8 of its width.",
-                "title": "Kernel Size Z",
-                "type": "integer"
+                "title": "Kernel Size Z"
               },
               "clip_limit": {
                 "default": 0.01,
@@ -153,9 +177,17 @@
                 "title": "Masking Iterator Configuration"
               },
               "roi_table": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
                 "description": "Name of a ROI table. If set, the segmentation will be applied to each ROI\nin the table individually. This option can be combined with masking.",
-                "title": "Iterate Over ROIs",
-                "type": "string"
+                "title": "Iterate Over ROIs"
               }
             },
             "title": "IteratorConfig",
@@ -211,9 +243,17 @@
                 "type": "integer"
               },
               "size_z": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
                 "description": "Size in pixels of the median filter in Z axis.\nIf not specified, no filtering is applied in Z axis.",
-                "title": "Size Z",
-                "type": "integer"
+                "title": "Size Z"
               }
             },
             "title": "MedianFilterConfig",
@@ -342,8 +382,16 @@
             "description": "Name of the resulting label image. Can contain a placeholder \"{channel_identifier}\" which will be replaced by the channel identifier specified in the channel parameter."
           },
           "level_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
             "title": "Level Path",
-            "type": "string",
             "description": "If the OME-Zarr has multiple resolution levels, the level to use can be specified here. If not provided, the highest resolution level will be used."
           },
           "stardist_model": {
@@ -353,17 +401,41 @@
             "description": "Name of the pretrained StarDist model to use. 2D models: \"2D_versatile_fluo\", \"2D_versatile_he\", \"2D_paper_dsb2018\". 3D models: \"3D_demo\". Defaults to \"2D_versatile_fluo\"."
           },
           "prob_thresh": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
             "title": "Prob Thresh",
-            "type": "number",
             "description": "Probability threshold for instance detection. If None, the model's default threshold is used."
           },
           "nms_thresh": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
             "title": "Nms Thresh",
-            "type": "number",
             "description": "Non-maximum suppression threshold for instance overlap removal. If None, the model's default is used."
           },
           "iterator_configuration": {
-            "$ref": "#/$defs/IteratorConfig",
+            "anyOf": [
+              {
+                "$ref": "#/$defs/IteratorConfig"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
             "title": "Iterator Configuration",
             "description": "Advanced configuration to control masked and ROI-based iteration."
           },
@@ -416,6 +488,6 @@
     }
   ],
   "has_args_schemas": true,
-  "args_schema_version": "pydantic_v2",
+  "args_schema_version": "fractal_schema_v1",
   "authors": "Fabio Steffen & Joel Luethi"
 }
