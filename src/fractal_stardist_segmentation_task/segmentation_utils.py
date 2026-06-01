@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Optional
 
 import numpy as np
+import tensorflow as tf
 from csbdeep.utils import normalize
 from stardist.models import StarDist2D, StarDist3D
 
@@ -116,6 +117,15 @@ def _loader_from_path(model_path: str) -> Callable[[], StarDist2D | StarDist3D]:
     return _load
 
 
+def _log_gpu_usage() -> None:
+    gpus = tf.config.list_physical_devices("GPU")
+    if gpus:
+        gpu_names = [g.name for g in gpus]
+        logger.info(f"GPU available, inference will run on GPU: {gpu_names}")
+    else:
+        logger.info("No GPU detected, inference will run on CPU")
+
+
 def load_stardist_model(
     stardist_model: StarDistModelPreset,
     custom_model_path: Optional[str] = None,
@@ -142,15 +152,18 @@ def load_stardist_model(
     if custom_model_path is not None:
         logger.info(f"Loading custom StarDist model from {custom_model_path}")
         loader = _loader_from_path(custom_model_path)
-        return _load_with_retry(
+        model = _load_with_retry(
             loader, description=f"custom model at {custom_model_path}"
         )
+        _log_gpu_usage()
+        return model
 
     model_name = stardist_model.value
     logger.info(f"Loading pretrained StarDist model '{model_name}'")
     loader = _loader_from_pretrained(model_name)
     model = _load_with_retry(loader, description=f"pretrained model '{model_name}'")
     logger.info(f"Successfully loaded StarDist model '{model_name}'")
+    _log_gpu_usage()
     return model
 
 
