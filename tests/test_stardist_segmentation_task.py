@@ -122,7 +122,7 @@ def test_stardist_scale(
     shape = (128, 128)
     axes = "yx"
     expected_objects = 15
-    scale = 1
+    scale = 2
     test_data_path = tmp_path / "data.zarr"
 
     if "c" in axes:
