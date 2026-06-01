@@ -2045,14 +2045,15 @@ packages:
   requires_python: '>=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4,<4'
 - pypi: ./
   name: fractal-stardist-segmentation-task
-  version: 0.1.1.dev2+g33d2fcb87.d20260506
-  sha256: 460ac16fad8126b85f345d232afb132126c71092d5e34a7307c07c3ee8875361
+  version: 0.1.1.dev0+g364b38e26.d20260601
+  sha256: 18d35db4260ca0d849dfafbefb0e66c6348170f4b7ff38397faa5e278ee5ff60
   requires_dist:
   - fractal-task-tools>=0.5.0,<0.6.0
   - fractal-tasks-utils>=0.1.5,<0.2.0
   - ngio>=0.5.7,<0.6.0
   - scikit-image>=0.26.0
   - stardist>=0.9.1
+  - tensorflow
   - devtools ; extra == 'dev'
   - hatch ; extra == 'dev'
   - jsonschema ; extra == 'dev'

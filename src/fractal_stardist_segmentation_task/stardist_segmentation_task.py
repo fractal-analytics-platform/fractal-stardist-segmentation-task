@@ -39,6 +39,7 @@ def stardist_segmentation_task(
     custom_model_path: str | None = None,
     prob_thresh: float | None = None,
     nms_thresh: float | None = None,
+    scale: int = 1,
     normalize_perc_low: float = 1.0,
     normalize_perc_high: float = 99.8,
     # Iterator / infrastructure parameters
@@ -79,6 +80,8 @@ def stardist_segmentation_task(
             detection. If None, the model's default threshold is used.
         nms_thresh (float | None): Non-maximum suppression threshold for
             instance overlap removal. If None, the model's default is used.
+        scale (int): Scale factor for StarDist prediction. Default is 1
+            (no scaling).
         normalize_perc_low (float): Lower percentile for input normalization.
             Pixels at or below this percentile are mapped to 0. Default: 1.0.
         normalize_perc_high (float): Upper percentile for input normalization.
@@ -124,6 +127,7 @@ def stardist_segmentation_task(
         segmentation_func=lambda x: segment_image(
             image=x,
             model=model,
+            scale=scale,
             prob_thresh=prob_thresh,
             nms_thresh=nms_thresh,
             normalize_perc_low=normalize_perc_low,

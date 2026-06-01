@@ -450,6 +450,12 @@
             "title": "Nms Thresh",
             "description": "Non-maximum suppression threshold for instance overlap removal. If None, the model's default is used."
           },
+          "scale": {
+            "default": 1,
+            "title": "Scale",
+            "type": "integer",
+            "description": "Scale factor for StarDist prediction. Default is 1 (no scaling)."
+          },
           "normalize_perc_low": {
             "default": 1.0,
             "title": "Normalize Perc Low",
