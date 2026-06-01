@@ -157,6 +157,7 @@ def load_stardist_model(
 def segment_image(
     image: np.ndarray,
     model: StarDist2D | StarDist3D,
+    scale: int = 1,
     prob_thresh: Optional[float] = None,
     nms_thresh: Optional[float] = None,
     normalize_perc_low: float = 1.0,
@@ -173,6 +174,7 @@ def segment_image(
         image: Input image as numpy array. May be 2D (H, W), 3D (Z, H, W), or
             have extra leading singleton dims like (1, H, W) or (1, Z, H, W).
         model: Loaded StarDist2D or StarDist3D model.
+        scale: Scale factor for StarDist prediction. Default is 1 (no scaling).
         prob_thresh: Probability threshold for instance detection. If None, the
             model's default is used.
         nms_thresh: Non-maximum suppression threshold for overlap removal.
@@ -210,7 +212,7 @@ def segment_image(
     )
 
     labels, _ = model.predict_instances(
-        spatial_image, axes=axes, normalizer=None, **predict_kwargs
+        spatial_image, axes=axes, normalizer=None, scale=scale, **predict_kwargs
     )
 
     logger.info(f"Generated {labels.max()} instances, shape={labels.shape}")

@@ -113,3 +113,49 @@ def test_stardist_segmentation_task_masked(
     # For timeseries, this gets multiplied by number of timepoints (as the
     # same synthetic data is repeated across time).
     assert np.max(label_data) == expected_objects
+
+
+def test_stardist_scale(
+    tmp_path: Path,
+):
+    """Base test for the StarDist segmentation task."""
+    shape = (128, 128)
+    axes = "yx"
+    expected_objects = 15
+    scale = 1
+    test_data_path = tmp_path / "data.zarr"
+
+    if "c" in axes:
+        num_channels = shape[axes.index("c")]
+    else:
+        num_channels = 1
+    channel_labels = [f"DAPI_{i}" for i in range(num_channels)]
+
+    ome_zarr = create_synthetic_ome_zarr(
+        store=test_data_path,
+        shape=shape,
+        channels_meta=channel_labels,
+        overwrite=False,
+        axes_names=axes,
+    )
+    channel = ChannelSelectionModel(identifier="DAPI_0", mode="label")
+
+    stardist_segmentation_task(
+        zarr_url=str(test_data_path),
+        channel=channel,
+        stardist_model=StarDistModelPreset.versatile_fluo_2d,
+        overwrite=True,
+        scale=scale,
+    )
+    print(test_data_path)
+
+    expected_label = "DAPI_0_stardist_segmented"
+    assert expected_label in ome_zarr.list_labels()
+
+    label = ome_zarr.get_label(expected_label)
+    label_data = label.get_as_numpy()
+    # In the synthethic data above, StarDist finds 40 objects in the
+    # first channel, independent of the axis setup. For timeseries, this gets
+    # multiplied by number of timepoints (as the same synthetic data is
+    # repeated across time).
+    assert np.max(label_data) == expected_objects
